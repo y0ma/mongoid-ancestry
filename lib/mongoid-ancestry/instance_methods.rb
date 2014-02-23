@@ -233,10 +233,26 @@ module Mongoid
     def cast_primary_key(key)
       if primary_key_type == Integer
         key.to_i
-      elsif primary_key_type == Moped::BSON::ObjectId && key =~ /[a-z0-9]{24}/
-        Moped::BSON::ObjectId.from_string(key)
+      elsif is_primary_key_type_bson_objectid? && key =~ /[a-z0-9]{24}/
+        bson_objectid_from_string(key)
       else
         key
+      end
+    end
+
+    def is_primary_key_type_bson_objectid?
+      if Mongoid.mongoid3?
+        primary_key_type == Moped::BSON::ObjectId
+      else
+        primary_key_type == BSON::ObjectId
+      end
+    end
+
+    def bson_objectid_from_string(key)
+      if Mongoid.mongoid3?
+        Moped::BSON::ObjectId.from_string(key)
+      else
+        BSON::ObjectId.from_string(key)
       end
     end
 

@@ -232,7 +232,7 @@ describe MongoidAncestry do
   end
 
   it "should build ancestry from parent ids" do
-    subject.with_model :skip_ancestry => true, :extra_columns => {:parent_id => 'Moped::BSON::ObjectId'} do |model|
+    subject.with_model :skip_ancestry => true, :extra_columns => {:parent_id => parent_id} do |model|
       [model.create!].each do |parent1|
         (Array.new(5) { model.create :parent_id => parent1.id }).each do |parent2|
           (Array.new(5) { model.create :parent_id => parent2.id }).each do |parent3|
@@ -294,6 +294,14 @@ describe MongoidAncestry do
   it "should raise exception when rebuilding depth cache for model without depth caching" do
     subject.with_model do |model|
       expect { model.rebuild_depth_cache! }.to raise_error(Mongoid::Ancestry::Error)
+    end
+  end
+
+  def parent_id
+    if Mongoid.mongoid3?
+      'Moped::BSON::ObjectId'
+    else
+      'BSON::ObjectId'
     end
   end
 
