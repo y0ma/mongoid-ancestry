@@ -56,25 +56,25 @@ module Mongoid
 
         # Create named scopes for depth
         {:before_depth => 'lt', :to_depth => 'lte', :at_depth => nil, :from_depth => 'gte', :after_depth => 'gt'}.each do |scope_name, operator|
-          scope scope_name, lambda { |depth|
+          scope scope_name, ->(depth) {
             raise Error.new("Named scope '#{scope_name}' is only available when depth caching is enabled.") unless opts[:cache_depth]
             where( (operator ? depth_cache_field.send(operator.to_sym) : depth_cache_field) => depth)
           }
         end
 
         scope :roots, -> { where(ancestry_field => nil) }
-        scope :ancestors_of, lambda { |object| where(to_node(object).ancestor_conditions) }
-        scope :children_of, lambda { |object| where(to_node(object).child_conditions) }
-        scope :descendants_of, lambda { |object| any_of(to_node(object).descendant_conditions) }
-        scope :subtree_of, lambda { |object| any_of(to_node(object).subtree_conditions) }
-        scope :siblings_of, lambda { |object| where(to_node(object).sibling_conditions) }
+        scope :ancestors_of, ->(object) { where(to_node(object).ancestor_conditions) }
+        scope :children_of, ->(object) { where(to_node(object).child_conditions) }
+        scope :descendants_of, ->(object) { any_of(to_node(object).descendant_conditions) }
+        scope :subtree_of, ->(object) { any_of(to_node(object).subtree_conditions) }
+        scope :siblings_of, ->(object) { where(to_node(object).sibling_conditions) }
         scope :ordered_by_ancestry, -> { asc(:"#{self.base_class.ancestry_field}") }
-        scope :ordered_by_ancestry_and, lambda {|by| ordered_by_ancestry.order_by([by]) }
+        scope :ordered_by_ancestry_and, ->(by) { ordered_by_ancestry.order_by([by]) }
 
         # Update descendants with new ancestry before save
         before_save :update_descendants_with_new_ancestry
 
-        before_save :touch_parent, if: lambda { |obj|
+        before_save :touch_parent, if: ->(obj) {
           obj.touchable && obj.send(:"#{self.class.ancestry_field}_changed?")
         }
 
