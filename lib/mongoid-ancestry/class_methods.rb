@@ -1,6 +1,8 @@
 module Mongoid
   module Ancestry
-    include Mongoid::Attributes::Dynamic
+    unless Mongoid.mongoid3?
+      include Mongoid::Attributes::Dynamic
+    end
     module ClassMethods
       def has_ancestry(opts = {})
         defaults = {
