@@ -23,6 +23,8 @@ Gem::Specification.new do |s|
     "README.md"
   ]
 
-  s.add_dependency('mongoid', "~> 3.1")
+  s.add_development_dependency "rake"
+  s.add_development_dependency "rspec"
+  s.add_runtime_dependency "mongoid"
 end
 
