@@ -25,7 +25,7 @@ Your model is now a tree!
 
 ## Mongoid compatibility
 
-This gem only supports Mongoid 3.x starting with version 0.3.0. And Mongoid 4.x starting with version 0.3.3
+This gem only supports Mongoid 3.x starting with version 0.3.0. And Mongoid 4.x starting with version 0.4.0
 
 If you want to use Mongoid version 2.x, you should either use this gem in a 0.2.x version or checkout the "mongoid-2.4-stable" branch. You can ask bundler to stick with 0.2.x versions of this gem by adding this to your Gemfile: `gem 'mongoid-ancestry', '~> 0.2.2'`
 
