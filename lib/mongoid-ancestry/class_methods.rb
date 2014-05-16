@@ -34,8 +34,8 @@ module Mongoid
         self.orphan_strategy = opts[:orphan_strategy]
 
         # Create touch accessor and set to option or default
-        cattr_accessor :touchable
-        self.touchable = opts[:touchable]
+        cattr_accessor :ancestry_touchable
+        self.ancestry_touchable = opts[:touchable]
 
         # Validate format of ancestry column value
         primary_key_format = opts[:primary_key_format] || /[a-z0-9]+/
@@ -78,7 +78,7 @@ module Mongoid
         before_save :update_descendants_with_new_ancestry
 
         before_save :touch_parent, if: ->(obj) {
-          obj.touchable && obj.send(:"#{self.class.ancestry_field}_changed?")
+          obj.ancestry_touchable && obj.send(:"#{self.class.ancestry_field}_changed?")
         }
 
         # Apply orphan strategy before destroy
