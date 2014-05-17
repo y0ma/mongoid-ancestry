@@ -36,13 +36,13 @@ describe MongoidAncestry do
 
   it "should have default touchable value" do
     subject.with_model do |model|
-      model.touchable.should be_false
+      model.ancestry_touchable.should be_false
     end
   end
 
   it "should set touchable value" do
     subject.with_model touchable: true do |model|
-      model.touchable.should be_true
+      model.ancestry_touchable.should be_true
     end
   end
 
